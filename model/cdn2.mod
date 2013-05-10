@@ -23,6 +23,7 @@ param Hmax;         #available capacity for allocation object in proxy servers
 #-------------------------------------------------------------------------------------
 var f {N,O} binary;         #1 if object saved at node k, 0 otherwise
 var x {E,K,O};              #value of the demand realised over edge for object
+var s {K,O};                #source nodes
 
 #goal function
 #-------------------------------------------------------------------------------------
@@ -40,8 +41,7 @@ minimize goal:
 subject to c0 {e in E, k in K, o in O}:
     x[e,k,o]>=0;
 
-subject to c1a {k in K, o in O, n in N: n!=t[k,o]}:
-(r[n,k]==1 and f[n,o]==1)
+subject to c1a {k in K, o in O, n in N: n==s[k,o]}:
     ==>
         sum{e in E}
             (a[n,e]*x[e,k,o]) -
@@ -49,8 +49,7 @@ subject to c1a {k in K, o in O, n in N: n!=t[k,o]}:
             (b[n,e]*x[e,k,o]) =
                                 d[k,o]*(1-f[k,o]);
                                 
-subject to c1b {k in K, o in O, n in N: n!=t[k,o]}:
-(r[n,k]!=1 or f[n,o]!=1)
+subject to c1b {k in K, o in O, n in N: n!=t[k,o] and n!=s[k,o]}:
     ==>
         sum{e in E}
             (a[n,e]*x[e,k,o]) -
@@ -76,3 +75,6 @@ sum{n in N}
 
 subject to c4 {o in O}:
     f[1,o]=1;
+
+subject to c5 {k in K, o in O}:
+    s[k,o]=2-sum{n in N}(r[n,k]*f[n,o])+(sum{n in N}(r[n,k]*f[n,o])-1)*(sum{i in 2..N}(r[i,k]*f[i,o]*i));
