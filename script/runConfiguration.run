@@ -1,5 +1,5 @@
 option solver cplex;
-model model/cdn.mod; data data/trival2stageExample.dat; 
+model model/cdn2.mod; data data/trival2stageExample.dat; 
 #for {i in 0..10} {
     #let Hmax := i;
     solve;

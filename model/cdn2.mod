@@ -41,19 +41,28 @@ subject to c0 {e in E, k in K, o in O}:
     x[e,k,o]>=0;
 
 subject to c1a {k in K, o in O, n in N: n!=t[k,o]}:
-sum{e in E}
-    (a[n,e]*x[e,k,o]) -
-sum{e in E}
-    (b[n,e]*x[e,k,o]) =
-                (if (r[n,k]==1 and f[n,o]==1) 
-                    then d[k,o]*(1-f[k,o])
-                    else 0);
+(r[n,k]==1 and f[n,o]==1)
+    ==>
+        sum{e in E}
+            (a[n,e]*x[e,k,o]) -
+        sum{e in E}
+            (b[n,e]*x[e,k,o]) =
+                                d[k,o]*(1-f[k,o]);
+                                
+subject to c1b {k in K, o in O, n in N: n!=t[k,o]}:
+(r[n,k]!=1 or f[n,o]!=1)
+    ==>
+        sum{e in E}
+            (a[n,e]*x[e,k,o]) -
+        sum{e in E}
+            (b[n,e]*x[e,k,o]) =
+                                0;
                             
 subject to c1c {k in K, o in O, n in N: n==t[k,o]}:
 sum{e in E}
     (a[n,e]*x[e,k,o]) -
 sum{e in E}
-    (b[n,e]*x[e,k,o]) <=
+    (b[n,e]*x[e,k,o]) =
                             -d[k,o]*(1-f[k,o]);
                             
 subject to c2:
