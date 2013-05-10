@@ -1,0 +1,9 @@
+option solver cplex;
+model model/cdn.mod; data data/trival2stageExample.dat; 
+#for {i in 0..10} {
+    #let Hmax := i;
+    solve;
+    display f, x;
+#}
+
+reset;
